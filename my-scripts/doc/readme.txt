@@ -1,12 +1,12 @@
 1) create a new repo on github
 
-git clone git@github.com:RobertBerger/meta-arm.git
+git clone git@github.com:RobertBerger/linux-yocto-dev.git
 
 2) add my-scripts dir
 
-cd meta-arm
+cd linux-yocto-dev
 
-echo "# meta-arm fork" >> README.md
+echo "# linux-yocto-dev fork" >> README.md
 
 git init
 
@@ -14,20 +14,18 @@ git add .
 
 git commit -m "first commit"
 
-#git remote add origin git@github.com:RobertBerger/meta-arm.git
-
 git push -u origin master
 
 3) use my repo
 
-mv meta-arm meta-arm.ori
-git clone git@github.com:RobertBerger/meta-arm.git
+mv linux-yocto-dev linux-yocto-dev.ori
+git clone git@github.com:RobertBerger/linux-yocto-dev.git
 
 4) add upstream
 
-cd meta-arm
+cd linux-yocto-dev
 
-git remote add official-upstream https://git.yoctoproject.org/meta-arm
+git remote add official-upstream https://git.yoctoproject.org/linux-yocto-dev
 
 $ git fetch official-upstream
 
@@ -37,15 +35,12 @@ warning: no common commits
 
 5) use specific upstream branch and make our own branch
 
-git co remotes/official-upstream/master
 
-5.1) we want commit: 4112fda50b814ad6e3cfaefe5cad78a83114599a
+# Create and switch to your new custom hardware branch based on official-upstream v7.2/standard/base
 
-git co 4112fda50b814ad6e3cfaefe5cad78a83114599a
+git checkout -b v7.2/standard/phyboard-pollux-imx8mp-3 official-upstream/v7.2/standard/base
 
-git branch 2026-08-11-training
 
-git co 2026-08-11-training
 
 5.3) push upstream
 
