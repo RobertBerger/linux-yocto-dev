@@ -1,0 +1,30 @@
+on the build machine:
+
+backup meta-arm (tarball)
+
+cd meta-arm
+
+git co master
+git remote add official-upstream https://git.yoctoproject.org/meta-arm
+git fetch official-upstream
+
+# here are my modifications to a previous version
+git checkout 2026-08-11-training
+
+# new branch
+git checkout -b 2026-08-11-training-merged
+git diff 2026-08-11-training
+# they should be identical and we should be on the 2026-08-11-training-merged branch
+
+# rebase
+git rebase official-upstream/master
+
+Successfully rebased and updated refs/heads/2026-08-11-training-merged.
+
+bitbake core-image-minimal
+
+ERROR: No recipes in default available for:
+  /workdir/build/yocto-ampliphy-master-2026-08-11-01-pinned/bitbake-builds/yocto-ampliphy-pinned/layers/meta-phytec/dynamic-layers/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10%.bbappend
+
+We need to rebase meta-phytec to get this fixed!
+
