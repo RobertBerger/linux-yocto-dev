@@ -8,7 +8,7 @@ BATCH_SIZE=1000  # Increased slightly for speed, but below the 2GB pack limit
 # Ensure these branches have already been created locally via git checkout -b
 BRANCHES=(
     "master"
-    "v6.18/standard/phyboard-pollux-imx8mp-3"
+    "v7.2/standard/phyboard-pollux-imx8mp-3"
 )
 
 # Loop through each branch in the array
