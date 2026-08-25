@@ -39,6 +39,7 @@ warning: no common commits
 # Create and switch to your new custom hardware branch based on official-upstream v7.2/standard/base
 
 git checkout -b v7.2/standard/phyboard-pollux-imx8mp-3 official-upstream/v7.2/standard/base
+git checkout -b v7.2/standard/pollux official-upstream/v7.2/standard/base
 
 
 
