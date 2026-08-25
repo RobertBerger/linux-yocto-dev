@@ -9,6 +9,7 @@ BATCH_SIZE=1000  # Increased slightly for speed, but below the 2GB pack limit
 BRANCHES=(
     "master"
     "v7.2/standard/phyboard-pollux-imx8mp-3"
+    "v7.2/standard/pollux"
 )
 
 # Loop through each branch in the array
