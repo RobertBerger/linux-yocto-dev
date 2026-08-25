@@ -40,6 +40,7 @@ warning: no common commits
 
 git checkout -b v7.2/standard/phyboard-pollux-imx8mp-3 official-upstream/v7.2/standard/base
 git checkout -b v7.2/standard/pollux official-upstream/v7.2/standard/base
+git checkout -b v7.2/standard/genericarm64-phyboard-pollux-imx8mp-3 official-upstream/v7.2/
 
 use this:
 push-all-to-github.sh
