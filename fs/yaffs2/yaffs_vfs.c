@@ -1488,7 +1488,9 @@ static int yaffs_mkdir(struct inode *dir, struct dentry *dentry, int mode)
 }
 
 
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(7, 3, 0))
+static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode)
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
 static int yaffs_create(struct mnt_idmap *ns, struct inode *dir, struct dentry *dentry, umode_t mode,
 			bool dummy)
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0))
