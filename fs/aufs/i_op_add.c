@@ -388,13 +388,13 @@ int aufs_symlink(struct mnt_idmap *idmap, struct inode *dir,
 }
 
 int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
-		struct dentry *dentry, umode_t mode, bool want_excl)
+		struct dentry *dentry, umode_t mode)
 {
 	struct simple_arg arg = {
 		.type = Creat,
 		.u.c = {
 			.mode		= mode,
-			.want_excl	= want_excl
+			.want_excl	= false
 		}
 	};
 	return add_simple(dir, dentry, &arg);
