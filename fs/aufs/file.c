@@ -1,19 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2005-2025 Junjiro R. Okajima
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2005-2026 Junjiro R. Okajima
  */
 
 /*
@@ -820,8 +807,6 @@ static int aufs_swap_activate(struct swap_info_struct *sis, struct file *file,
 { AuUnsupport(); return 0; }
 static void aufs_swap_deactivate(struct file *file)
 { AuUnsupport(); }
-static int aufs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
-{ AuUnsupport(); return 0; }
 #endif /* CONFIG_AUFS_DEBUG */
 
 const struct address_space_operations aufs_aop = {
@@ -842,7 +827,6 @@ const struct address_space_operations aufs_aop = {
 	.is_dirty_writeback	= aufs_is_dirty_writeback,
 	.error_remove_folio	= aufs_error_remove_folio,
 	.swap_activate		= aufs_swap_activate,
-	.swap_deactivate	= aufs_swap_deactivate,
-	.swap_rw		= aufs_swap_rw
+	.swap_deactivate	= aufs_swap_deactivate
 #endif /* CONFIG_AUFS_DEBUG */
 };

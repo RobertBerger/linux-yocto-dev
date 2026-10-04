@@ -1,19 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * Copyright (C) 2005-2025 Junjiro R. Okajima
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2005-2026 Junjiro R. Okajima
  */
 
 /*
@@ -26,7 +13,6 @@
 #ifdef __KERNEL__
 
 #include <linux/fs.h>
-#include <linux/mount.h>
 #include <linux/posix_acl.h>
 #include <linux/xattr.h>
 #include "debug.h"
@@ -209,8 +195,7 @@ struct dentry *vfsub_lock_rename(struct dentry *d1, struct au_hinode *hdir1,
 void vfsub_unlock_rename(struct dentry *d1, struct au_hinode *hdir1,
 			 struct dentry *d2, struct au_hinode *hdir2);
 
-int vfsub_create(struct inode *dir, struct path *path, int mode,
-		 bool want_excl);
+int vfsub_create(struct inode *dir, struct path *path, int mode);
 int vfsub_symlink(struct inode *dir, struct path *path,
 		  const char *symname);
 int vfsub_mknod(struct inode *dir, struct path *path, int mode, dev_t dev);
@@ -277,10 +262,9 @@ static inline void vfsub_touch_atime(struct vfsmount *h_mnt,
 #endif
 
 static inline int vfsub_update_time(struct inode *h_inode,
-				    enum fs_update_time type,
-				    unsigned int flags)
+				    enum fs_update_time type, int flags)
 {
-	return inode_update_time(h_inode, type, flags);
+	return !inode_update_time(h_inode, type, flags);
 	/* no vfsub_update_h_iattr() since we don't have struct path */
 }
 

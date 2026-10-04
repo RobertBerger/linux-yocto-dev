@@ -1,19 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2017-2025 Junjiro R. Okajima
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2017-2026 Junjiro R. Okajima
  */
 
 /*
@@ -201,7 +188,7 @@ static int au_dr_hino_load(struct au_dr_br *dr, struct file *hinofile)
 			goto out_free;
 		}
 
-		ent = kmalloc(sizeof(*ent), GFP_NOFS);
+		ent = kmalloc_obj(*ent, GFP_NOFS);
 		if (!ent) {
 			err = -ENOMEM;
 			AuTraceErr(err);
@@ -290,8 +277,7 @@ static int au_dr_hino(struct super_block *sb, aufs_bindex_t bindex,
 			}
 			goto out_mnt_write;
 		} else if (!d_is_positive(hinopath.dentry)) {
-			err = vfsub_create(dir, &hinopath, 0600,
-					   /*want_excl*/false);
+			err = vfsub_create(dir, &hinopath, 0600);
 			AuTraceErr(err);
 			if (unlikely(err))
 				goto out_mnt_write;
@@ -439,7 +425,7 @@ static int au_brid_str(struct au_dr_brid *brid, struct inode *h_inode,
 	AuDebugOn(err > sz);
 	p += err;
 	sz -= err;
-	err = snprintf(p, sz, "_%llu", (unsigned long long)h_inode->i_ino);
+	err = snprintf(p, sz, "_%llu", h_inode->i_ino);
 	AuDebugOn(err > sz);
 	p += err;
 	sz -= err;
@@ -633,7 +619,7 @@ static int au_drinfo_do_store(struct au_drinfo_store *w,
 	err = 0;
 	h_dir = d_inode(w->h_ppath.dentry);
 	if (elm && d_is_negative(infopath.dentry)) {
-		err = vfsub_create(h_dir, &infopath, 0600, /*want_excl*/true);
+		err = vfsub_create(h_dir, &infopath, 0600);
 		AuTraceErr(err);
 		if (unlikely(err))
 			goto out_dput;
@@ -894,7 +880,7 @@ int au_dr_rename(struct dentry *src, aufs_bindex_t bindex,
 	AuDbg("bindex %d\n", bindex);
 
 	err = -ENOMEM;
-	ent = kmalloc(sizeof(*ent), GFP_NOFS);
+	ent = kmalloc_obj(*ent, GFP_NOFS);
 	if (unlikely(!ent))
 		goto out;
 
@@ -1150,9 +1136,8 @@ int au_dr_lkup(struct au_do_lookup_args *lkup, struct dentry *dentry,
 	bbot = au_sbbot(sb);
 	w.ninfo = bbot + 1;
 	if (!lkup->dirren.drinfo) {
-		lkup->dirren.drinfo = kcalloc(w.ninfo,
-					      sizeof(*lkup->dirren.drinfo),
-					      GFP_NOFS);
+		lkup->dirren.drinfo = kzalloc_objs(*lkup->dirren.drinfo,
+						   w.ninfo, GFP_NOFS);
 		if (unlikely(!lkup->dirren.drinfo)) {
 			err = -ENOMEM;
 			goto out;

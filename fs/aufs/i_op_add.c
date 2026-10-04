@@ -1,19 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2005-2025 Junjiro R. Okajima
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2005-2026 Junjiro R. Okajima
  */
 
 /*
@@ -226,7 +213,6 @@ struct simple_arg {
 	union {
 		struct {
 			umode_t			mode;
-			bool			want_excl;
 			bool			try_aopen;
 			struct vfsub_aopen_args	*aopen;
 		} c;
@@ -265,7 +251,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
 	IMustLock(dir);
 
 	err = -ENOMEM;
-	a = kmalloc(sizeof(*a), GFP_NOFS);
+	a = kmalloc_obj(*a, GFP_NOFS);
 	if (unlikely(!a))
 		goto out;
 	a->wr_dir_args.force_btgt = -1;
@@ -297,8 +283,7 @@ static int add_simple(struct inode *dir, struct dentry *dentry,
 	switch (arg->type) {
 	case Creat:
 		if (!try_aopen || !h_dir->i_op->atomic_open) {
-			err = vfsub_create(h_dir, &a->h_path, arg->u.c.mode,
-					   arg->u.c.want_excl);
+			err = vfsub_create(h_dir, &a->h_path, arg->u.c.mode);
 			created = !err;
 			if (!err && try_aopen)
 				aopen->file->f_mode |= FMODE_CREATED;
@@ -393,8 +378,7 @@ int aufs_create(struct mnt_idmap *idmap, struct inode *dir,
 	struct simple_arg arg = {
 		.type = Creat,
 		.u.c = {
-			.mode		= mode,
-			.want_excl	= false
+			.mode		= mode
 		}
 	};
 	return add_simple(dir, dentry, &arg);
@@ -407,7 +391,6 @@ int au_aopen_or_create(struct inode *dir, struct dentry *dentry,
 		.type = Creat,
 		.u.c = {
 			.mode		= aopen_args->create_mode,
-			.want_excl	= aopen_args->open_flag & O_EXCL,
 			.try_aopen	= true,
 			.aopen		= aopen_args
 		}
@@ -443,6 +426,7 @@ int aufs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
 		goto out;
 
 	dentry = file->f_path.dentry;
+	AuDebugOn(au_di(dentry));
 	err = au_di_init(dentry);
 	if (unlikely(err))
 		goto out_si;
@@ -669,7 +653,7 @@ static int au_cpup_or_link(struct dentry *src_dentry, struct dentry *dentry,
 					 &a->h_path);
 			dput(h_src_dentry);
 		} else {
-			AuIOErr("no dentry found for hi%lu on b%d\n",
+			AuIOErr("no dentry found for hi%llu on b%d\n",
 				h_inode->i_ino, a->bdst);
 			err = -EIO;
 		}
@@ -702,7 +686,7 @@ int aufs_link(struct dentry *src_dentry, struct inode *dir,
 	IMustLock(inode);
 
 	err = -ENOMEM;
-	a = kzalloc(sizeof(*a), GFP_NOFS);
+	a = kzalloc_obj(*a, GFP_NOFS);
 	if (unlikely(!a))
 		goto out;
 
@@ -859,7 +843,7 @@ struct dentry *aufs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
 	IMustLock(dir);
 
 	ret = ERR_PTR(-ENOMEM);
-	a = kmalloc(sizeof(*a), GFP_NOFS);
+	a = kmalloc_obj(*a, GFP_NOFS);
 	if (unlikely(!a))
 		goto out;
 
